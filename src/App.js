@@ -1,24 +1,26 @@
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Route } from 'react-router-dom'
+import {Container} from '@material-ui/core'
+
+import NavBar from './components/NavBar/NavBar'
+import NewShow from './components/NewShow/NewShow'
+import AvailableShow from './components/AvailableShow/AvailableShow'
+import UserDetails from './components/UserDetails/UserDetails'
+import ShowBooking from './components/ShowBooking/ShowBooking'
+import CheckStatus from './components/CheckStatus/CheckStatus'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+        <NavBar/>
+        <Container>
+          <Route path='/newshow' exact component={NewShow} />
+          <Route path='/' exact component={AvailableShow} />
+          <Route path='/user' exact component={UserDetails} />
+          <Route path='/booking' exact component={ShowBooking} />
+          <Route path='/status' exact component={CheckStatus} />
+        </Container>
+    </BrowserRouter>
   );
 }
 
