@@ -36,7 +36,7 @@ const ShowBooking = () => {
                 console.log(ticket)
                 alert(`Dear ${booking.username} Your Ticket is Succesfully booked.. Please Pay ${price} @ Counter`)
                 localStorage.removeItem('bookshow')
-                history.push(`/status?email=${booking.email}`)
+                history.push(`/status?mail=${booking.email}`)
             } catch (error) {
                 if (error.response.status === 400){
                     alert('Ticket Already Booked')
@@ -83,7 +83,6 @@ const ShowBooking = () => {
                         checked
                         onChange={(e) => handleClick(e,index)} />
                     </label>)}
-                    
                 </from>)
                 }
             )}

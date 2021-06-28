@@ -14,3 +14,6 @@ export const getShows = async() =>{
 export const getBookings = async(email) =>{
     return await API.get(`/booking/search/${email}`)
 }
+export const updateBookings = async(data) =>{
+    return await API.post(`/booking/update/`,data)
+}

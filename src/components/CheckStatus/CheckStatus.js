@@ -1,18 +1,42 @@
-import React, {useState} from 'react'
-import {Container,Typography,Button,TextField,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Paper} from '@material-ui/core/';
+import React, {useState,useEffect} from 'react'
+import {Container,Button,TextField,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Paper} from '@material-ui/core/';
 import moment from 'moment'
 import styles from './styles'
 import * as API from '../../api'
 
-const CheckStatus = () => {
+const CheckStatus = ({location}) => {
     const classes = styles()
     const [email, setEmail] = useState('')
     const [bookings, setBookings] = useState([])
+    const params = new URLSearchParams(location.search); 
+    const mail = params.get('mail');
+
     const handleClick = async () => {
         const {data} = await API.getBookings(email)
         setBookings(data)
     }
-    console.log(bookings)
+
+    useEffect(() => {
+      if(mail){
+        setEmail(mail)
+      }
+    }, [mail])
+
+    const handleCancel = async (booking) => {
+      
+      if(booking.bookingStatus === 'Cancelled'){
+        alert('Ticket is already Cancelled')
+        return
+      }else{
+        const update = {...booking,bookingStatus:"Cancelled"}
+        const {data} = await API.updateBookings(update)
+        if(data){
+          alert("ticket Cancelled successfully")
+          handleClick()
+        }
+      }
+    }
+
     return (
         <>
         <Container  component="main" maxWidth="xs" className={classes.root}>
@@ -45,12 +69,12 @@ const CheckStatus = () => {
               <TableCell align="center">Booked Seats</TableCell>
               <TableCell align="center">Amount</TableCell>
               <TableCell align="center">Current Status</TableCell>
-              <TableCell align="center">Cancel</TableCell>
+              <TableCell align="center">Modify</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {bookings.map((row) => (
-              <TableRow key={row.shows.name}>
+              <TableRow key={row._id}>
                 <TableCell component="th" scope="row">
                   {row.shows.name}
                 </TableCell>
@@ -58,7 +82,11 @@ const CheckStatus = () => {
                 <TableCell align="center">{row.bookedSeats.toString()}</TableCell>
                 <TableCell align="center">{row.bookingAmount}</TableCell>
                 <TableCell align="center">{row.bookingStatus}</TableCell>
-                <TableCell align="center"><Button fullWidth variant="contained" color="primary" >Cancel</Button></TableCell>
+                <TableCell align="center">{ ((new Date(row.shows.showTime) - new Date()) / 1000) > 3600 ? 
+                  <Button fullWidth variant="contained" color="primary" onClick={() => handleCancel(row)}>Cancel</Button> 
+                  : null
+                  } 
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
