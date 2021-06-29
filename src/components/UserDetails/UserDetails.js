@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {Container,TextField,Paper,Typography,Grid,Button} from '@material-ui/core/';
 import styles from './styles'
 import { useHistory } from 'react-router-dom';
+import validator from 'validator'
 
 const UserDetails = () => {
     let booking = JSON.parse(localStorage.getItem('bookshow'))
@@ -17,13 +18,17 @@ const UserDetails = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if(name === '' && email=== ''){
+        if(!name&&!email){
             alert('Enter Name and Email ')
         }else{
-            booking = {...booking,username:name,email}
-            localStorage.setItem('bookshow', JSON.stringify(booking))
-            history.push('/booking')
-        }
+            if (validator.isEmail(email)) {
+                booking = {...booking,username:name,email}
+                localStorage.setItem('bookshow', JSON.stringify(booking))
+                history.push('/booking')
+              } else {
+                alert('Enter valid Email!')
+              }
+            }
     }
     return (
         <Container  component="main" maxWidth="xs" className={classes.root}>
@@ -39,13 +44,16 @@ const UserDetails = () => {
                             variant="outlined" 
                             onChange={(e) => setName(e.target.value)}
                             name='name'
+                            required
                         />
                         <TextField 
                             id="outlined-basic" 
                             fullWidth label="Email Id" 
                             variant="outlined" 
                             onChange={(e) => setEmail(e.target.value)}
-                            name='venue'
+                            name='email'
+                            type='email'
+                            required
                         />
                         <Button 
                             type="submit" 
